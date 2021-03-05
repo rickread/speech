@@ -49,11 +49,13 @@ recognition.lang = "en-GB";
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
-document.body.onclick = function () {
-  recognition.start();
-  console.log("Speech recognition start.");
-};
+document.onload = function (ev) {
+  document.body.onclick = function () {
+    recognition.start();
+    console.log("Speech recognition start.");
+  };
 
-recognition.onresult = function (event) {
-  console.log(event);
+  recognition.onresult = function (event) {
+    console.log(event);
+  };
 };
