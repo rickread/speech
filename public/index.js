@@ -49,7 +49,7 @@ recognition.lang = "en-GB";
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
-document.onload = function (ev) {
+window.onload = function (ev) {
   document.body.onclick = function () {
     recognition.start();
     console.log("Speech recognition start.");
