@@ -9,16 +9,16 @@ const endpoint = process.env.TEXT_ANALYTICS_ENDPOINT;
 
 export default async (req, res) => {
   if (req.method === "POST") {
-    let statement = req.body.statement;
+    let transcript = req.body.transcript;
 
     const textAnalyticsClient = new TextAnalyticsClient(
       endpoint,
       new AzureKeyCredential(key)
     );
 
-    console.log("Received statement: " + statement);
+    console.log("Received transcript: " + transcript);
 
-    let response = await entityRecognition(textAnalyticsClient, statement);
+    let response = await entityRecognition(textAnalyticsClient, transcript);
 
     res.statusCode = 200;
     res.json({ names: response });
@@ -33,6 +33,8 @@ async function entityRecognition(client, statement) {
   let names = [];
 
   results.forEach((document) => {
+    console.log("RECEIVED DOCUMENT", document);
+
     let personEntities = document.entities.filter(
       (entity) => entity.category === "Person" && entity.confidenceScore >= 0.6
     );

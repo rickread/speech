@@ -3,11 +3,6 @@ import React from "react";
 import { render } from "react-dom";
 import styles from "../styles/Home.module.css";
 
-var SpeechRecognition =
-  window.SpeechRecognition || window["webkitSpeechRecognition"];
-var SpeechGrammarList =
-  window.SpeechGrammarList || window["webkitSpeechGrammarList"];
-
 const firstNameWords = [
   '"First Name"',
   "First",
@@ -48,7 +43,7 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
 
-    this.recognition = new SpeechRecognition();
+    this.recognition = null;
 
     this.state = {
       resultText: "",
@@ -58,13 +53,20 @@ class Home extends React.Component {
   }
 
   beginSpeechRecognition = (e) => {
-    if (!this.state.speechRecognitionStarted) {
-      recognition.start();
+    if (!this.state.speechRecognitionStarted && this.recognition) {
+      this.recognition.start();
       console.log("Speech recognition started");
     }
   };
 
   componentDidMount() {
+    let SpeechRecognition =
+      window.SpeechRecognition || window["webkitSpeechRecognition"];
+    let SpeechGrammarList =
+      window.SpeechGrammarList || window["webkitSpeechGrammarList"];
+
+    this.recognition = new SpeechRecognition();
+
     let speechRecognitionList = new SpeechGrammarList();
     speechRecognitionList.addFromString(firstNameGrammar, 1);
     speechRecognitionList.addFromString(surnameGrammar, 1);
@@ -86,7 +88,7 @@ class Home extends React.Component {
 
     this.recognition.onresult = (e) => {
       if (e.results && e.results.length) {
-        let result = e.results.length[0][0];
+        let result = e.results[0][0];
 
         console.log("Speech found: ", result);
 
@@ -100,7 +102,10 @@ class Home extends React.Component {
             body: JSON.stringify({ transcript: result.transcript }),
           })
             .then((res) => {
-              let names = res.json().names;
+              return res.json();
+            })
+            .then((json) => {
+              let names = json.names;
 
               names.forEach((name, index, arr) => {
                 if (index == 0) {
@@ -148,7 +153,7 @@ class Home extends React.Component {
         <main className={styles.main}>
           <h1 className={styles.title}>Speech Demo</h1>
           <p>Hey there! Please can you tell me your name?</p>
-          <button onClick={beginSpeechRecognition}>Tap to speak!</button>
+          <button onClick={this.beginSpeechRecognition}>Tap to speak!</button>
 
           <span className={this.state.resultType}>{this.state.resultText}</span>
         </main>
