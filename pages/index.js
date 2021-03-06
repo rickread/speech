@@ -4,11 +4,9 @@ import { render } from "react-dom";
 import styles from "../styles/Home.module.css";
 
 var SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
+  window.SpeechRecognition || window["webkitSpeechRecognition"];
 var SpeechGrammarList =
-  window.SpeechGrammarList || window.webkitSpeechGrammarList;
-var SpeechRecognitionEvent =
-  window.SpeechRecognitionEvent || window.webkitSpeechRecognitionEvent;
+  window.SpeechGrammarList || window["webkitSpeechGrammarList"];
 
 const firstNameWords = [
   '"First Name"',
